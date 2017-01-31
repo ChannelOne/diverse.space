@@ -159,7 +159,7 @@ export class MyScene {
         sunLight.position.x = 0;
         sunLight.position.y = 15;
         sunLight.position.z = 180;
-        sunLight.intensity = 0.42;
+        sunLight.intensity = 0.38;
         sunLight.penumbra = 0.55;
         sunLight.angle = 0.220;
         sunLight.target = this._halo.getObjects();
