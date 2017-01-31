@@ -41,8 +41,9 @@ export class MyScene {
             this.addLight();
         })
 
-        let _comet;
-        for (var i = 0; i < 5; i++) {
+        var _comet;
+        var _count = getRandomInt(5, 10);
+        for (var i = 0; i < _count; i++) {
             if (i === 0) {
                 _comet = new Comet(true);
             } else {
@@ -53,6 +54,8 @@ export class MyScene {
         }
 
         this._last_time = new Date();
+
+        this.addBackground();
 
         window.addEventListener("mousemove", (e: MouseEvent) => {
             this.handleMouseMove(e);
@@ -82,7 +85,8 @@ export class MyScene {
     }
 
     private addSphere() {
-        var geometry = new THREE.SphereBufferGeometry(300, 32, 16);
+        // var geometry = new THREE.SphereBufferGeometry(300, 32, 16);
+        var geometry = new THREE.BoxBufferGeometry(1000, 500, 500);
         var material = new THREE.MeshStandardMaterial({
             color: 2712982,
             roughness: 0.86,
@@ -111,6 +115,23 @@ export class MyScene {
             mesh.position.z = (index - 1) * -15;
             this._scene.add(mesh);
         });
+    }
+
+    private addBackground() {
+        var loader = new THREE.TextureLoader();
+        loader.load("/assets/images/cloud-t1.png", (texture: THREE.Texture) => {
+            var geometry = new THREE.PlaneBufferGeometry(1200, 230);
+            var material = new THREE.MeshStandardMaterial({
+                map: texture,
+                blending: THREE.AdditiveBlending,
+                transparent: true
+            })
+            material.opacity = 0.75;
+            var mesh = new THREE.Mesh(geometry, material);
+            mesh.position.y = 10;
+            mesh.position.z = -185;
+            this._scene.add(mesh);
+        })
     }
 
     private addPlane(z: number) {

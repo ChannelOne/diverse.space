@@ -97,6 +97,7 @@ var comet_1 = __webpack_require__(4);
 var trace_1 = __webpack_require__(6);
 var cloud_1 = __webpack_require__(3);
 var halo_1 = __webpack_require__(5);
+var util_1 = __webpack_require__(1);
 var MyScene = (function () {
     function MyScene() {
         var _this = this;
@@ -123,7 +124,8 @@ var MyScene = (function () {
             _this.addLight();
         });
         var _comet;
-        for (var i = 0; i < 5; i++) {
+        var _count = util_1.getRandomInt(5, 10);
+        for (var i = 0; i < _count; i++) {
             if (i === 0) {
                 _comet = new comet_1.Comet(true);
             }
@@ -134,6 +136,7 @@ var MyScene = (function () {
             this._scene.add(_comet.getObject());
         }
         this._last_time = new Date();
+        this.addBackground();
         window.addEventListener("mousemove", function (e) {
             _this.handleMouseMove(e);
         });
@@ -158,7 +161,8 @@ var MyScene = (function () {
         this._camera.rotation.y = vector.x / window.innerWidth * 0.025;
     };
     MyScene.prototype.addSphere = function () {
-        var geometry = new THREE.SphereBufferGeometry(300, 32, 16);
+        // var geometry = new THREE.SphereBufferGeometry(300, 32, 16);
+        var geometry = new THREE.BoxBufferGeometry(1000, 500, 500);
         var material = new THREE.MeshStandardMaterial({
             color: 2712982,
             roughness: 0.86,
@@ -184,6 +188,23 @@ var MyScene = (function () {
             material.opacity = 0.8;
             var mesh = new THREE.Mesh(geometry, material);
             mesh.position.z = (index - 1) * -15;
+            _this._scene.add(mesh);
+        });
+    };
+    MyScene.prototype.addBackground = function () {
+        var _this = this;
+        var loader = new THREE.TextureLoader();
+        loader.load("/assets/images/cloud-t1.png", function (texture) {
+            var geometry = new THREE.PlaneBufferGeometry(1200, 230);
+            var material = new THREE.MeshStandardMaterial({
+                map: texture,
+                blending: THREE.AdditiveBlending,
+                transparent: true
+            });
+            material.opacity = 0.75;
+            var mesh = new THREE.Mesh(geometry, material);
+            mesh.position.y = 10;
+            mesh.position.z = -185;
             _this._scene.add(mesh);
         });
     };
@@ -485,7 +506,17 @@ exports.Trace = Trace;
 "use strict";
 
 var myScene_1 = __webpack_require__(2);
-new myScene_1.MyScene().appendTo(document.body);
+var container = document.getElementById("my-canvas");
+function init() {
+    new myScene_1.MyScene().appendTo(container);
+}
+window.addEventListener("resize", function (e) {
+    while (container.lastChild) {
+        container.removeChild(container.lastChild);
+    }
+    init();
+});
+init();
 
 
 /***/ })
