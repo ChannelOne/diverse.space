@@ -8,13 +8,14 @@ function init() {
     new MyScene().appendTo(container);
 
     audioElem = <HTMLAudioElement>document.createElement("audio");
-    audioElem.autoplay = true;
 
     var source = <HTMLSourceElement>document.createElement("source");
     source.type = "audio/ogg";
     source.src = "/assets/audios/bgm.ogg";
     audioElem.appendChild(source);
     document.body.appendChild(audioElem);
+
+    audioElem.play();
 }
 
 window.addEventListener("resize", (e: Event) => {

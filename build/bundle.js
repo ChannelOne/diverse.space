@@ -511,12 +511,12 @@ var audioElem;
 function init() {
     new myScene_1.MyScene().appendTo(container);
     audioElem = document.createElement("audio");
-    audioElem.autoplay = true;
     var source = document.createElement("source");
     source.type = "audio/ogg";
     source.src = "/assets/audios/bgm.ogg";
     audioElem.appendChild(source);
     document.body.appendChild(audioElem);
+    audioElem.play();
 }
 window.addEventListener("resize", function (e) {
     document.body.removeChild(audioElem);
