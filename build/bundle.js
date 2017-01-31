@@ -507,10 +507,20 @@ exports.Trace = Trace;
 
 var myScene_1 = __webpack_require__(2);
 var container = document.getElementById("my-canvas");
+var audioElem;
 function init() {
     new myScene_1.MyScene().appendTo(container);
+    audioElem = document.createElement("audio");
+    audioElem.autoplay = true;
+    var source = document.createElement("source");
+    source.type = "audio/ogg";
+    source.src = "/assets/audios/bgm.ogg";
+    audioElem.appendChild(source);
+    document.body.appendChild(audioElem);
 }
 window.addEventListener("resize", function (e) {
+    document.body.removeChild(audioElem);
+    audioElem = null;
     while (container.lastChild) {
         container.removeChild(container.lastChild);
     }
