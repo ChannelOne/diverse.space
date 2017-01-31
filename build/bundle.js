@@ -512,8 +512,8 @@ function init() {
     new myScene_1.MyScene().appendTo(container);
     audioElem = document.createElement("audio");
     var source = document.createElement("source");
-    source.type = "audio/ogg";
-    source.src = "/assets/audios/bgm.ogg";
+    source.type = "audio/mpeg";
+    source.src = "/assets/audios/bgm.mp3";
     audioElem.appendChild(source);
     document.body.appendChild(audioElem);
     audioElem.play();
