@@ -1,0 +1,23 @@
+{
+  "name": "diverse.space",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server": "http-server ./ -p 3000",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChannelOne/diverse.space.git"
+  },
+  "author": "DZ Chan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChannelOne/diverse.space/issues"
+  },
+  "homepage": "https://github.com/ChannelOne/diverse.space#readme",
+  "devDependencies": {
+    "webpack": "^2.2.1"
+  }
+}
