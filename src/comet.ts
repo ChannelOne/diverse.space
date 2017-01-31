@@ -1,18 +1,38 @@
 import * as THREE from "three"
+import {getRandomInt} from "./util"
 
 export class Comet {
 
+    private _isMain: boolean;
     private _mesh: THREE.Mesh;
     private _velocity: THREE.Vector3;
 
-    constructor() {
-        var geometry = new THREE.SphereBufferGeometry(1, 32, 16);
-        var material = new THREE.MeshBasicMaterial();
+    constructor(isMain: boolean = true) {
+        this._isMain = isMain;
+
+        var geometry;
+        var material;
+
+        if (!this._isMain) {
+            material = new THREE.MeshBasicMaterial({
+                color: 12566463
+            });
+            geometry = new THREE.SphereBufferGeometry(0.65, 32, 16);
+        } else {
+            material = new THREE.MeshBasicMaterial();
+            geometry = new THREE.SphereBufferGeometry(1, 32, 16);
+        }
 
         this._mesh = new THREE.Mesh(geometry, material);
-        this._mesh.position.x = 30.15;
-        this._mesh.position.y = 70.42;
-        this._mesh.position.z = -135;
+        if (this._isMain) {
+            this._mesh.position.x = 30.15;
+            this._mesh.position.y = 100.42;
+            this._mesh.position.z = -135;
+        } else {
+            this._mesh.position.x = getRandomInt(-30, 60);
+            this._mesh.position.y = getRandomInt(100, 130);
+            this._mesh.position.z = getRandomInt(-135, -160);
+        }
 
         this._velocity = <THREE.Vector3>{
             x: -1,
@@ -23,6 +43,10 @@ export class Comet {
 
     get velocity() {
         return this._velocity;
+    }
+
+    get isMain() {
+        return this._isMain;
     }
 
     getObject() : THREE.Object3D {
