@@ -58,7 +58,7 @@ export class MyScene {
 
         this._last_time = new Date();
 
-        this.addBackground();
+        // this.addBackground();
 
         window.addEventListener("mousemove", (e: MouseEvent) => {
             this.handleMouseMove(e);
@@ -157,15 +157,15 @@ export class MyScene {
         pointLight.position.z = 60;
         pointLight.penumbra = 0.5;
         pointLight.angle = Math.PI / 2.2;
-        pointLight.intensity =  0.56;
+        pointLight.intensity =  0.52;
 
         var sunLight = new THREE.SpotLight();
         sunLight.position.x = 0;
         sunLight.position.y = 13;
         sunLight.position.z = 60 
-        sunLight.intensity = 0.24;
-        sunLight.penumbra = 0.87;
-        sunLight.angle = 0.425;
+        sunLight.intensity = 0.62;
+        sunLight.penumbra = 0.89;
+        sunLight.angle = 0.475;
         sunLight.target = this._sky.getObjects()[1];
         pointLight.target = this._sky.getObjects()[1];
 
@@ -178,6 +178,14 @@ export class MyScene {
     }
 
     private _countDelta = 0;
+
+    get renderer(): THREE.WebGLRenderer {
+        return this._renderer;
+    }
+
+    get camera(): THREE.PerspectiveCamera {
+        return this._camera;
+    }
 
     render() {
         window.requestAnimationFrame(() => {

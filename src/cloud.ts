@@ -30,10 +30,10 @@ export class Cloud {
     }
 
     private allTextureLoaded() {
-        for (var i = 0; i < 32; i++) {
-            let zPos = i * -22;
+        for (var i = 0; i < 22; i++) {
+            let zPos = i * -45;
 
-            for (var j = 0; j < 20; j++) {
+            for (var j = 0; j < 42; j++) {
                 var geometry = new THREE.PlaneBufferGeometry(120, 15);
                 var material = new THREE.MeshStandardMaterial({
                     map: this._textures[getRandomInt(0, 2)],
@@ -45,7 +45,23 @@ export class Cloud {
                 material.opacity = 0.8;
                 var mesh = new THREE.Mesh(geometry, material);
                 mesh.position.z = zPos + j * 1;
-                mesh.position.x = getRandomInt(-390, 390);
+                mesh.position.x = getRandomInt(-390, -10);
+                this._mashes.push(mesh);
+            }
+
+            for (var j = 0; j < 42; j++) {
+                var geometry = new THREE.PlaneBufferGeometry(120, 15);
+                var material = new THREE.MeshStandardMaterial({
+                    map: this._textures[getRandomInt(0, 2)],
+                    roughness: 0.46,
+                    metalness: 0,
+                    alphaTest: 0.2,
+                    blending: THREE.AdditiveBlending,
+                });
+                material.opacity = 0.8;
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.position.z = zPos + j * 1;
+                mesh.position.x = getRandomInt(0, 390);
                 this._mashes.push(mesh);
             }
         }

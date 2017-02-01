@@ -4,8 +4,11 @@ import {MyScene} from "./myScene"
 var container = document.getElementById("my-canvas");
 var audioElem: HTMLAudioElement;
 
+var myscene: MyScene;
+
 function init() {
-    new MyScene().appendTo(container);
+    myscene = new MyScene();
+    myscene.appendTo(container);
 
     audioElem = <HTMLAudioElement>document.createElement("audio");
 
@@ -18,7 +21,7 @@ function init() {
     audioElem.play();
 }
 
-window.addEventListener("resize", (e: Event) => {
+function replay() {
 
     document.body.removeChild(audioElem);
     audioElem = null;
@@ -29,6 +32,14 @@ window.addEventListener("resize", (e: Event) => {
 
     init();
 
+}
+
+window.addEventListener("resize", (e: Event) => {
+    myscene.camera.aspect = window.innerWidth / window.innerHeight;
+    myscene.camera.updateProjectionMatrix();
+
+    myscene.renderer.setSize(window.innerWidth, window.innerHeight);
+    myscene.render();
 })
 
 init();
