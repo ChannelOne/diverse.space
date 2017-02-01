@@ -2,7 +2,7 @@ import * as THREE from "three"
 import {Comet} from "./comet"
 import {Trace} from "./trace"
 import {Cloud} from "./cloud"
-import {Halo} from "./halo"
+import {Sky} from "./sky"
 import {getRandomInt} from "./util"
 
 export class MyScene {
@@ -15,13 +15,15 @@ export class MyScene {
     private _last_time: Date;
     private _traces: Trace[] = [];
     private _cloud: Cloud;
-    private _halo: Halo;
+
+    private _sky: Sky;
 
     private _staticRotationX = THREE.Math.degToRad(2.0);
 
     constructor() {
         this._scene = new THREE.Scene();
-        this._camera = new THREE.PerspectiveCamera(36.88, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this._camera = new THREE.PerspectiveCamera(36.88, window.innerWidth / window.innerHeight, 0.1, 2000000);
+        // this._camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 100, 2000000 );
         this._camera.rotation.x = this._staticRotationX;
         this._camera.position.x = 0;
         this._camera.position.y = 13;
@@ -30,16 +32,17 @@ export class MyScene {
         this._renderer = new THREE.WebGLRenderer();
         this._renderer.setSize(window.innerWidth, window.innerHeight)
 
-        this.addSphere();
+        this._sky = new Sky();
+        this._sky.getObjects().forEach((o: THREE.Object3D) => {
+            this._scene.add(o);
+        })
+
         this._cloud = new Cloud((meshes: THREE.Object3D[]) => {
             meshes.forEach((mesh) => {
                 this._scene.add(mesh);
             })
         })
-        this._halo = new Halo((mesh: THREE.Object3D) => {
-            this._scene.add(mesh);
-            this.addLight();
-        })
+        this.addLight();
 
         var _comet;
         var _count = getRandomInt(5, 10);
@@ -120,7 +123,7 @@ export class MyScene {
     private addBackground() {
         var loader = new THREE.TextureLoader();
         loader.load("/assets/images/cloud-t1.png", (texture: THREE.Texture) => {
-            var geometry = new THREE.PlaneBufferGeometry(1200, 230);
+            var geometry = new THREE.PlaneBufferGeometry(1200, 210);
             var material = new THREE.MeshStandardMaterial({
                 map: texture,
                 blending: THREE.AdditiveBlending,
@@ -128,7 +131,7 @@ export class MyScene {
             })
             material.opacity = 0.75;
             var mesh = new THREE.Mesh(geometry, material);
-            mesh.position.y = 10;
+            mesh.position.y = 92;
             mesh.position.z = -185;
             this._scene.add(mesh);
         })
@@ -148,21 +151,23 @@ export class MyScene {
     }
 
     private addLight() {
-        var pointLight = new THREE.PointLight();
+        var pointLight = new THREE.SpotLight();
         pointLight.position.x = 0;
-        pointLight.position.y = 80;
-        pointLight.position.z = 50.22;
-        pointLight.intensity =  1;
-        pointLight.decay = 1;
+        pointLight.position.y = 13;
+        pointLight.position.z = 60;
+        pointLight.penumbra = 0.5;
+        pointLight.angle = Math.PI / 2.2;
+        pointLight.intensity =  0.56;
 
         var sunLight = new THREE.SpotLight();
         sunLight.position.x = 0;
-        sunLight.position.y = 15;
-        sunLight.position.z = 180;
-        sunLight.intensity = 0.38;
-        sunLight.penumbra = 0.55;
-        sunLight.angle = 0.220;
-        sunLight.target = this._halo.getObjects();
+        sunLight.position.y = 13;
+        sunLight.position.z = 60 
+        sunLight.intensity = 0.24;
+        sunLight.penumbra = 0.87;
+        sunLight.angle = 0.425;
+        sunLight.target = this._sky.getObjects()[1];
+        pointLight.target = this._sky.getObjects()[1];
 
         this._scene.add(pointLight);
         this._scene.add(sunLight);
