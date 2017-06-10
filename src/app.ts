@@ -1,45 +1,22 @@
-import * as THREE from "three"
-import {MyScene} from "./myScene"
+import {Vector2d, Circle} from "./model"
 
-var container = document.getElementById("my-canvas");
-var audioElem: HTMLAudioElement;
+function RefreshFactory(elem: HTMLCanvasElement): Function {
+    return function() {
+        const width = elem.width;
+        const height = elem.height;
+        const ctx = elem.getContext("2d");
+        ctx.clearRect(0, 0, width, height);
 
-var myscene: MyScene;
-
-function init() {
-    myscene = new MyScene();
-    myscene.appendTo(container);
-
-    audioElem = <HTMLAudioElement>document.createElement("audio");
-
-    var source = <HTMLSourceElement>document.createElement("source");
-    source.type = "audio/mpeg";
-    source.src = "/assets/audios/bgm.mp3";
-    audioElem.appendChild(source);
-    document.body.appendChild(audioElem);
-
-    audioElem.play();
-}
-
-function replay() {
-
-    document.body.removeChild(audioElem);
-    audioElem = null;
-
-    while(container.lastChild) {
-        container.removeChild(container.lastChild);
     }
-
-    init();
-
 }
 
-window.addEventListener("resize", (e: Event) => {
-    myscene.camera.aspect = window.innerWidth / window.innerHeight;
-    myscene.camera.updateProjectionMatrix();
+document.addEventListener("DOMContentLoaded", function(event) { 
+    let my_canvas = <HTMLCanvasElement>document.getElementById("my-canvas");
 
-    myscene.renderer.setSize(window.innerWidth, window.innerHeight);
-    myscene.render();
-})
+    window.addEventListener("resize", (evt) => {
+        my_canvas.width = window.innerWidth;
+        my_canvas.height = window.innerHeight;
+    });
 
-init();
+    setInterval(RefreshFactory(my_canvas), 20);
+});
