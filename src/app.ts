@@ -31,5 +31,5 @@ document.addEventListener("DOMContentLoaded", function(event) {
     let world = new World();
     lastDate = new Date();
 
-    setInterval(RefreshFactory(my_canvas, world), 20);
+    setInterval(RefreshFactory(my_canvas, world), 40);
 });

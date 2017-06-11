@@ -85,11 +85,20 @@ var World = (function () {
     function World() {
         this._objects = [];
         var totalNum = randomFrom(20, 70);
-        for (var i = 0; i < totalNum; i++) {
-            var _shape = new model_1.Circle(new model_1.Vector2d(randomFrom(0, 42), randomFrom(0, 42)), randomFrom(0, 2));
-            var object = new model_1.WObject(_shape, new model_1.Vector2d(randomFrom(0, 1), randomFrom(0, 1)), randomFrom(100, 200));
+        this._objects = [
+            new model_1.WObject(new model_1.Circle(new model_1.Vector2d(21, 8), 0.45), new model_1.Vector2d(0.83, 0), 0.03),
+            new model_1.WObject(new model_1.Circle(new model_1.Vector2d(21, 18), 0.45), new model_1.Vector2d(-0.83, 0), 0.03),
+            new model_1.WObject(new model_1.Circle(new model_1.Vector2d(21, 15), 0.1), new model_1.Vector2d(1.256, 0), 0.01),
+            new model_1.WObject(new model_1.Circle(new model_1.Vector2d(21, 23), 0.6), new model_1.Vector2d(-0.55, 0), 0.43),
+            new model_1.WObject(new model_1.Circle(new model_1.Vector2d(21, 13), 0.85), new model_1.Vector2d(0, 0), 3000),
+        ];
+        /*
+        for (let i = 0; i < totalNum; i++) {
+            let _shape = new Circle(new Vector2d(randomFrom(0, 42), randomFrom(0, 42)), randomFrom(0, 1));
+            let object = new WObject(_shape, new Vector2d(randomFrom(0, 1), randomFrom(0, 1)), randomFrom(100, 200));
             this._objects.push(object);
         }
+        */
     }
     World.prototype.update = function (deltaMS) {
         var _this = this;
@@ -106,6 +115,10 @@ var World = (function () {
             value.speed = tmp_spd;
             value.position = value.position.add(value.speed.multiply(deltaMS));
             return value;
+        }).map(function (value) {
+            return value;
+        }).filter(function (value) {
+            return value !== null;
         }).filter(function (value) {
             return value.position.x >= -value.shape.radius &&
                 value.position.y >= -value.shape.radius &&
@@ -188,7 +201,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     });
     var world = new World_1.World();
     lastDate = new Date();
-    setInterval(RefreshFactory(my_canvas, world), 20);
+    setInterval(RefreshFactory(my_canvas, world), 40);
 });
 
 
@@ -309,13 +322,22 @@ exports.Vector2d = Vector2d;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var track_arr;
 var WObject = (function () {
     function WObject(shape, speed, quality) {
+        this._last_width = 0;
         this._shape = shape;
         this._speed = speed.clone();
         this._quality = quality;
+        track_arr = [];
     }
     WObject.prototype.paint = function (ctx, width, height) {
+        if (width !== this._last_width || width * height !== track_arr.length) {
+            track_arr = [];
+            track_arr.length = width * height;
+            track_arr = track_arr.map(function () { return false; });
+            this._last_width = width;
+        }
         var scale = width / 42;
         ctx.fillStyle = "black";
         ctx.beginPath();
@@ -330,6 +352,17 @@ var WObject = (function () {
         ctx.stroke();
         ctx.fillStyle = "red";
         ctx.fillText("(" + this.position.x.toFixed(2) + "," + this.position.y.toFixed(2) + ")", this.position.x * scale, this.position.y * scale);
+        /*
+    track_arr[Math.round(this.position.y * scale) * height + Math.round(this.position.x * scale)] = true;
+    for (let i = 0; i < height; ++i)
+        for (let j = 0; j < width; ++j) {
+            if (track_arr[i * height + j]) {
+                ctx.fillStyle = "orange";
+                ctx.fillRect(j, i, 1, 1);
+                ctx.stroke();
+            }
+        }
+        */
     };
     Object.defineProperty(WObject.prototype, "position", {
         get: function () {

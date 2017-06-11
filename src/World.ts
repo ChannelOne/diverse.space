@@ -15,11 +15,20 @@ export class World {
 
     constructor() {
         let totalNum = randomFrom(20, 70);
+        this._objects = [
+            new WObject(new Circle(new Vector2d(21,8), 0.45), new Vector2d(0.83, 0), 0.03),
+            new WObject(new Circle(new Vector2d(21,18), 0.45), new Vector2d(-0.83, 0), 0.03),
+            new WObject(new Circle(new Vector2d(21,15), 0.1), new Vector2d(1.256, 0), 0.01),
+            new WObject(new Circle(new Vector2d(21,23), 0.6), new Vector2d(-0.55, 0), 0.43),
+            new WObject(new Circle(new Vector2d(21,13), 0.85), new Vector2d(0, 0), 3000),
+        ];
+        /*
         for (let i = 0; i < totalNum; i++) {
-            let _shape = new Circle(new Vector2d(randomFrom(0, 42), randomFrom(0, 42)), randomFrom(0, 2));
+            let _shape = new Circle(new Vector2d(randomFrom(0, 42), randomFrom(0, 42)), randomFrom(0, 1));
             let object = new WObject(_shape, new Vector2d(randomFrom(0, 1), randomFrom(0, 1)), randomFrom(100, 200));
             this._objects.push(object);
         }
+        */
     }
 
     update(deltaMS: number) {

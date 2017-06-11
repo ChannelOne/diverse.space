@@ -1,18 +1,29 @@
 import {Circle, Vector2d} from "."
 
+let track_arr: boolean[];
+
 export class WObject {
 
     private _shape: Circle;
     private _speed: Vector2d;
     private _quality: number;
 
+    private _last_width = 0;
+
     constructor(shape: Circle, speed: Vector2d, quality: number) {
         this._shape = shape;
         this._speed = speed.clone();
         this._quality = quality;
+        track_arr = []
     }
 
     paint(ctx: CanvasRenderingContext2D, width:number, height: number) {
+        if (width !== this._last_width || width * height !== track_arr.length) {
+            track_arr = [];
+            track_arr.length = width * height;
+            track_arr = track_arr.map(() => false);
+            this._last_width = width;
+        }
         const scale = width / 42;
         ctx.fillStyle = "black";
         ctx.beginPath();
@@ -29,6 +40,18 @@ export class WObject {
         ctx.fillStyle = "red";
         ctx.fillText("(" + this.position.x.toFixed(2) + "," + this.position.y.toFixed(2) + ")", 
             this.position.x * scale, this.position.y * scale);
+
+            /*
+        track_arr[Math.round(this.position.y * scale) * height + Math.round(this.position.x * scale)] = true;
+        for (let i = 0; i < height; ++i)
+            for (let j = 0; j < width; ++j) {
+                if (track_arr[i * height + j]) {
+                    ctx.fillStyle = "orange";
+                    ctx.fillRect(j, i, 1, 1);
+                    ctx.stroke();
+                }
+            }
+            */
     }
 
     set position(value: Vector2d) {
