@@ -14,8 +14,12 @@ export class Circle {
         let deltaLen = that.position.sub(this._position).length();
         if (deltaLen >= this._radius + that._radius) return null;
         else {
+            let _contain = false;
+            if (deltaLen < Math.abs(this._radius - that._radius)) _contain = true;
             return {
-                delta: this._radius + that._radius - deltaLen
+                contain: _contain,
+                delta: this._radius + that._radius - deltaLen,
+                positionDelta: that._position.sub(this._position),
             };
         }
     }
