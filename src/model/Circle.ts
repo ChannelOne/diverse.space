@@ -1,4 +1,4 @@
-import {Vector2d, IntersectResult} from "."
+import {Vector2d, Rectangle, IntersectResult} from "."
 
 export class Circle {
 
@@ -8,6 +8,10 @@ export class Circle {
     constructor(pos: Vector2d, radius: number) {
         this._position = pos.clone();
         this._radius = radius;
+    }
+
+    clone() {
+        return new Circle(this._position, this._radius);
     }
 
     intersectWith(that: Circle): IntersectResult {
@@ -22,6 +26,11 @@ export class Circle {
                 positionDelta: that._position.sub(this._position),
             };
         }
+    }
+
+    getBoundingRect() {
+        return new Rectangle(this._position.x - this._radius, this._position.y - this._radius,
+            this._position.x + this._radius, this._position.y + this._radius);
     }
 
     set position(value: Vector2d) {

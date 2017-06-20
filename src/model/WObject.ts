@@ -17,29 +17,37 @@ export class WObject {
         track_arr = []
     }
 
-    paint(ctx: CanvasRenderingContext2D, width:number, height: number) {
+    clone() {
+        return new WObject(this._shape.clone(), this._speed.clone(), this._quality);
+    }
+
+    paint(ctx: CanvasRenderingContext2D) {
+        /*
         if (width !== this._last_width || width * height !== track_arr.length) {
             track_arr = [];
             track_arr.length = width * height;
             track_arr = track_arr.map(() => false);
             this._last_width = width;
         }
-        const scale = width / 42;
+        */
+
+        // const scale = width / 42;
         ctx.fillStyle = "black";
         ctx.beginPath();
-        ctx.arc(this.position.x * scale, this.position.y * scale, this.shape.radius * scale, 0, 2 * Math.PI);
+        ctx.arc(this.position.x, this.position.y, this.shape.radius, 0, 2 * Math.PI);
         ctx.stroke();
 
         ctx.beginPath();
         ctx.fillStyle = "blue";
-        ctx.moveTo(this.position.x * scale, this.position.y * scale);
+        ctx.moveTo(this.position.x, this.position.y);
+
         let target = this.position.add(this.speed);
-        ctx.lineTo(target.x * scale, target.y * scale);
+        ctx.lineTo(target.x, target.y);
         ctx.closePath();
         ctx.stroke();
         ctx.fillStyle = "red";
         ctx.fillText("(" + this.position.x.toFixed(2) + "," + this.position.y.toFixed(2) + ")", 
-            this.position.x * scale, this.position.y * scale);
+            this.position.x, this.position.y);
 
             /*
         track_arr[Math.round(this.position.y * scale) * height + Math.round(this.position.x * scale)] = true;

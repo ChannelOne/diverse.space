@@ -1,5 +1,6 @@
 
 export {Vector2d} from "./Vector2d"
+export {Rectangle} from "./Rectangle"
 import {Vector2d} from "./Vector2d"
 
 export interface IntersectResult {

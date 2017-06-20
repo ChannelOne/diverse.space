@@ -1,4 +1,5 @@
 import {Vector2d, Circle, IntersectResult, WObject} from "./model"
+import {Camera} from "./Camera"
 
 const width = 42;
 const height = 42;
@@ -11,16 +12,21 @@ function randomFrom(begin: number, end: number) {
 
 export class World {
 
+    private _camera: Camera;
     private _objects: WObject[] = [];
 
     constructor() {
         let totalNum = randomFrom(20, 70);
+        this._camera = new Camera;
+        this._camera.position = new Vector2d(width / 2, height / 2);
+
         this._objects = [
-            new WObject(new Circle(new Vector2d(21,8), 0.45), new Vector2d(0.83, 0), 0.03),
-            new WObject(new Circle(new Vector2d(21,18), 0.45), new Vector2d(-0.83, 0), 0.03),
-            new WObject(new Circle(new Vector2d(21,15), 0.1), new Vector2d(1.256, 0), 0.01),
-            new WObject(new Circle(new Vector2d(21,23), 0.6), new Vector2d(-0.55, 0), 0.43),
-            new WObject(new Circle(new Vector2d(21,13), 0.85), new Vector2d(0, 0), 3000),
+            new WObject(new Circle(new Vector2d(21,16), 0.45), new Vector2d(0.83, 0), 0.03),
+            new WObject(new Circle(new Vector2d(21,26), 0.45), new Vector2d(-0.83, 0), 0.03),
+            new WObject(new Circle(new Vector2d(21,23), 0.1), new Vector2d(1.256, 0), 0.01),
+            new WObject(new Circle(new Vector2d(21,33), 0.6), new Vector2d(-0.55, 0), 0.43),
+
+            new WObject(new Circle(new Vector2d(21,21), 0.85), new Vector2d(0, 0), 3000),
         ];
         /*
         for (let i = 0; i < totalNum; i++) {
@@ -43,8 +49,6 @@ export class World {
             })
             value.speed = tmp_spd;
             value.position = value.position.add(value.speed.multiply(deltaMS));
-            return value;
-        }).map((value) => {
             return value;
         }).filter((value)=> {
             return value !== null;
@@ -94,9 +98,21 @@ export class World {
     }
 
     paint(ctx: CanvasRenderingContext2D, width: number, height: number) {
-        this._objects.forEach((value) => {
-            value.paint(ctx, width, height);
-        })
+        const scale = width / 42 * this._camera.scale;
+        const offsetPos = new Vector2d(width / 2, height / 2);
+
+        let renderObject = this._objects.map((value) => {
+            let renderObj = value.clone();
+            renderObj.position = renderObj.position.sub(this._camera.position).multiply(scale).add(offsetPos);
+            renderObj.shape.radius = renderObj.shape.radius * scale;
+            return renderObj;
+        }).forEach((value) => {
+            value.paint(ctx);
+        });
+    }
+
+    get camera() {
+        return this._camera;
     }
 
 }
