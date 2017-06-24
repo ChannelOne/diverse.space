@@ -1,4 +1,4 @@
-import {Circle, Vector2d} from "."
+import {Circle, Vector2d, Resources} from "."
 
 let track_arr: boolean[];
 
@@ -21,7 +21,7 @@ export class WObject {
         return new WObject(this._shape.clone(), this._speed.clone(), this._quality);
     }
 
-    paint(ctx: CanvasRenderingContext2D) {
+    paint(ctx: CanvasRenderingContext2D, res: Resources) {
         /*
         if (width !== this._last_width || width * height !== track_arr.length) {
             track_arr = [];
@@ -32,11 +32,16 @@ export class WObject {
         */
 
         // const scale = width / 42;
+        ctx.drawImage(res.star_image, this.position.x - this.shape.radius, this.position.y - this.shape.radius, 
+            this.shape.radius * 2, this.shape.radius * 2);
+        /*
         ctx.fillStyle = "black";
         ctx.beginPath();
         ctx.arc(this.position.x, this.position.y, this.shape.radius, 0, 2 * Math.PI);
         ctx.stroke();
+        */
 
+        /*
         ctx.beginPath();
         ctx.fillStyle = "blue";
         ctx.moveTo(this.position.x, this.position.y);
@@ -48,8 +53,9 @@ export class WObject {
         ctx.fillStyle = "red";
         ctx.fillText("(" + this.position.x.toFixed(2) + "," + this.position.y.toFixed(2) + ")", 
             this.position.x, this.position.y);
+        */
 
-            /*
+        /*
         track_arr[Math.round(this.position.y * scale) * height + Math.round(this.position.x * scale)] = true;
         for (let i = 0; i < height; ++i)
             for (let j = 0; j < width; ++j) {

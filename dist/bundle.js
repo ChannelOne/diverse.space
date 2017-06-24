@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -73,55 +73,14 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Vector2d = (function () {
-    function Vector2d(x, y) {
-        this._x = x;
-        this._y = y;
-    }
-    Vector2d.prototype.add = function (that) {
-        return new Vector2d(this._x + that._x, this._y + that._y);
-    };
-    Vector2d.prototype.sub = function (that) {
-        return new Vector2d(this._x - that._x, this._y - that._y);
-    };
-    Vector2d.prototype.multiply = function (num) {
-        return new Vector2d(this._x * num, this._y * num);
-    };
-    Vector2d.prototype.divide = function (num) {
-        return new Vector2d(this._x / num, this._y / num);
-    };
-    Vector2d.prototype.dot = function (that) {
-        return this._x * that._x + this._y * that._y;
-    };
-    Vector2d.prototype.sqrLength = function () {
-        return this._x * this._x + this._y * this._y;
-    };
-    Vector2d.prototype.normalize = function () {
-        return this.divide(this.length());
-    };
-    Vector2d.prototype.length = function () {
-        return Math.sqrt(this.sqrLength());
-    };
-    Vector2d.prototype.clone = function () {
-        return new Vector2d(this._x, this._y);
-    };
-    Object.defineProperty(Vector2d.prototype, "x", {
-        get: function () {
-            return this._x;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Vector2d.prototype, "y", {
-        get: function () {
-            return this._y;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return Vector2d;
-}());
-exports.Vector2d = Vector2d;
+var Vector2d_1 = __webpack_require__(7);
+exports.Vector2d = Vector2d_1.Vector2d;
+var Rectangle_1 = __webpack_require__(6);
+exports.Rectangle = Rectangle_1.Rectangle;
+var Circle_1 = __webpack_require__(5);
+exports.Circle = Circle_1.Circle;
+var WObject_1 = __webpack_require__(8);
+exports.WObject = WObject_1.WObject;
 
 
 /***/ }),
@@ -131,25 +90,8 @@ exports.Vector2d = Vector2d;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Vector2d_1 = __webpack_require__(0);
-exports.Vector2d = Vector2d_1.Vector2d;
-var Rectangle_1 = __webpack_require__(7);
-exports.Rectangle = Rectangle_1.Rectangle;
-var Circle_1 = __webpack_require__(6);
-exports.Circle = Circle_1.Circle;
-var WObject_1 = __webpack_require__(8);
-exports.WObject = WObject_1.WObject;
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var model_1 = __webpack_require__(1);
-var Camera_1 = __webpack_require__(4);
+var model_1 = __webpack_require__(0);
+var Camera_1 = __webpack_require__(3);
 var width = 42;
 var height = 42;
 var a_constant = 1;
@@ -235,7 +177,7 @@ var World = (function () {
         }
         this._objects = result;
     };
-    World.prototype.paint = function (ctx, width, height) {
+    World.prototype.paint = function (ctx, width, height, res) {
         var _this = this;
         var scale = width / 42 * this._camera.scale;
         var offsetPos = new model_1.Vector2d(width / 2, height / 2);
@@ -245,7 +187,7 @@ var World = (function () {
             renderObj.shape.radius = renderObj.shape.radius * scale;
             return renderObj;
         }).forEach(function (value) {
-            value.paint(ctx);
+            value.paint(ctx, res);
         });
     };
     Object.defineProperty(World.prototype, "camera", {
@@ -261,7 +203,7 @@ exports.World = World;
 
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -272,7 +214,7 @@ exports.VirtualScroller = VirtualScroller_1.VirtualScroller;
 
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -308,26 +250,27 @@ exports.Camera = Camera;
 
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var World_1 = __webpack_require__(2);
-var Vector2d_1 = __webpack_require__(0);
-var view_1 = __webpack_require__(3);
+var World_1 = __webpack_require__(1);
+var model_1 = __webpack_require__(0);
+var view_1 = __webpack_require__(2);
 var lastDate;
-function RefreshFactory(elem, world) {
+function RefreshFactory(elem, world, res) {
     return function () {
         var width = elem.width;
         var height = elem.height;
         var ctx = elem.getContext("2d");
-        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, width, height);
         var now = new Date();
         var deltaTime = (now.getTime() - lastDate.getTime()) / 1000;
         world.update(deltaTime);
-        world.paint(ctx, width, height);
+        world.paint(ctx, width, height, res);
         lastDate = now;
     };
 }
@@ -335,6 +278,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
     var show_case = document.getElementById("showcase");
     var virtual_scroller_elem = document.getElementById("virtual-scroller");
     var my_canvas = document.getElementById("my-canvas");
+    var star_image = document.getElementById("star-image");
+    var resources = {
+        star_image: star_image
+    };
     var virtual_scroller = new view_1.VirtualScroller(virtual_scroller_elem);
     my_canvas.width = window.innerWidth;
     my_canvas.height = window.innerHeight;
@@ -353,14 +300,14 @@ document.addEventListener("DOMContentLoaded", function (event) {
     });
     my_canvas.addEventListener("mousedown", function (e) {
         mousedown = true;
-        originPoint = new Vector2d_1.Vector2d(e.clientX, e.clientY);
+        originPoint = new model_1.Vector2d(e.clientX, e.clientY);
         show_case.style.display = "none";
     });
     my_canvas.addEventListener("mousemove", (function (e) {
         if (!mousedown)
             return;
         var scale = my_canvas.width / 42 * world.camera.scale;
-        var newPoint = new Vector2d_1.Vector2d(e.clientX, e.clientY);
+        var newPoint = new model_1.Vector2d(e.clientX, e.clientY);
         var deltaPoint = newPoint.sub(originPoint).divide(scale);
         world.camera.position = world.camera.position.sub(deltaPoint);
         originPoint = newPoint;
@@ -369,18 +316,18 @@ document.addEventListener("DOMContentLoaded", function (event) {
         mousedown = false;
         show_case.style.display = "block";
     });
-    setInterval(RefreshFactory(my_canvas, world), 40);
+    setInterval(RefreshFactory(my_canvas, world, resources), 40);
 });
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var _1 = __webpack_require__(1);
+var _1 = __webpack_require__(0);
 var Circle = (function () {
     function Circle(pos, radius) {
         this._position = pos.clone();
@@ -433,7 +380,7 @@ exports.Circle = Circle;
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -516,6 +463,64 @@ exports.Rectangle = Rectangle;
 
 
 /***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Vector2d = (function () {
+    function Vector2d(x, y) {
+        this._x = x;
+        this._y = y;
+    }
+    Vector2d.prototype.add = function (that) {
+        return new Vector2d(this._x + that._x, this._y + that._y);
+    };
+    Vector2d.prototype.sub = function (that) {
+        return new Vector2d(this._x - that._x, this._y - that._y);
+    };
+    Vector2d.prototype.multiply = function (num) {
+        return new Vector2d(this._x * num, this._y * num);
+    };
+    Vector2d.prototype.divide = function (num) {
+        return new Vector2d(this._x / num, this._y / num);
+    };
+    Vector2d.prototype.dot = function (that) {
+        return this._x * that._x + this._y * that._y;
+    };
+    Vector2d.prototype.sqrLength = function () {
+        return this._x * this._x + this._y * this._y;
+    };
+    Vector2d.prototype.normalize = function () {
+        return this.divide(this.length());
+    };
+    Vector2d.prototype.length = function () {
+        return Math.sqrt(this.sqrLength());
+    };
+    Vector2d.prototype.clone = function () {
+        return new Vector2d(this._x, this._y);
+    };
+    Object.defineProperty(Vector2d.prototype, "x", {
+        get: function () {
+            return this._x;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vector2d.prototype, "y", {
+        get: function () {
+            return this._y;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return Vector2d;
+}());
+exports.Vector2d = Vector2d;
+
+
+/***/ }),
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -534,7 +539,7 @@ var WObject = (function () {
     WObject.prototype.clone = function () {
         return new WObject(this._shape.clone(), this._speed.clone(), this._quality);
     };
-    WObject.prototype.paint = function (ctx) {
+    WObject.prototype.paint = function (ctx, res) {
         /*
         if (width !== this._last_width || width * height !== track_arr.length) {
             track_arr = [];
@@ -544,30 +549,37 @@ var WObject = (function () {
         }
         */
         // const scale = width / 42;
+        ctx.drawImage(res.star_image, this.position.x - this.shape.radius, this.position.y - this.shape.radius, this.shape.radius * 2, this.shape.radius * 2);
+        /*
         ctx.fillStyle = "black";
         ctx.beginPath();
         ctx.arc(this.position.x, this.position.y, this.shape.radius, 0, 2 * Math.PI);
         ctx.stroke();
+        */
+        /*
         ctx.beginPath();
         ctx.fillStyle = "blue";
         ctx.moveTo(this.position.x, this.position.y);
-        var target = this.position.add(this.speed);
+
+        let target = this.position.add(this.speed);
         ctx.lineTo(target.x, target.y);
         ctx.closePath();
         ctx.stroke();
         ctx.fillStyle = "red";
-        ctx.fillText("(" + this.position.x.toFixed(2) + "," + this.position.y.toFixed(2) + ")", this.position.x, this.position.y);
-        /*
-    track_arr[Math.round(this.position.y * scale) * height + Math.round(this.position.x * scale)] = true;
-    for (let i = 0; i < height; ++i)
-        for (let j = 0; j < width; ++j) {
-            if (track_arr[i * height + j]) {
-                ctx.fillStyle = "orange";
-                ctx.fillRect(j, i, 1, 1);
-                ctx.stroke();
-            }
-        }
+        ctx.fillText("(" + this.position.x.toFixed(2) + "," + this.position.y.toFixed(2) + ")",
+            this.position.x, this.position.y);
         */
+        /*
+        track_arr[Math.round(this.position.y * scale) * height + Math.round(this.position.x * scale)] = true;
+        for (let i = 0; i < height; ++i)
+            for (let j = 0; j < width; ++j) {
+                if (track_arr[i * height + j]) {
+                    ctx.fillStyle = "orange";
+                    ctx.fillRect(j, i, 1, 1);
+                    ctx.stroke();
+                }
+            }
+            */
     };
     Object.defineProperty(WObject.prototype, "position", {
         get: function () {

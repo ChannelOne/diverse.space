@@ -1,4 +1,4 @@
-import {Vector2d, Circle, IntersectResult, WObject} from "./model"
+import {Vector2d, Circle, IntersectResult, WObject, Resources} from "./model"
 import {Camera} from "./Camera"
 
 const width = 42;
@@ -97,7 +97,7 @@ export class World {
         this._objects = result;
     }
 
-    paint(ctx: CanvasRenderingContext2D, width: number, height: number) {
+    paint(ctx: CanvasRenderingContext2D, width: number, height: number, res: Resources) {
         const scale = width / 42 * this._camera.scale;
         const offsetPos = new Vector2d(width / 2, height / 2);
 
@@ -107,7 +107,7 @@ export class World {
             renderObj.shape.radius = renderObj.shape.radius * scale;
             return renderObj;
         }).forEach((value) => {
-            value.paint(ctx);
+            value.paint(ctx, res);
         });
     }
 

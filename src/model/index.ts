@@ -11,3 +11,4 @@ export interface IntersectResult {
 
 export {Circle} from "./Circle"
 export {WObject} from "./WObject"
+export {Resources} from "./Resources"
